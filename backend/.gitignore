@@ -37,3 +37,4 @@ build/
 .env.*
 application-dev.properties
 application-local.properties
+uploads/
