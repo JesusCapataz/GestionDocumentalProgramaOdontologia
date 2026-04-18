@@ -1,0 +1,141 @@
+<!-- ═══════════════════════════════════════════════════════════
+  MODAL 1 — SUBIR ANEXO
+  Abre con: openModal('uploadModal')  →  botón "+ Subir Anexo"
+  Cierra con: closeModal('uploadModal')  →  Cancelar / X / Escape / clic-backdrop
+  PRODUCCIÓN: el modal empieza cerrado. Está visible aquí por defecto
+  para previsualización del diseño (ver clase is-open más abajo).
+═══════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" [class.is-open]="isOpen" role="dialog" aria-modal="true" aria-labelledby="uploadTitle">
+  <div class="modal-card md">
+
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Repositorio Institucional</div>
+        <h2 class="modal-title" id="uploadTitle">Subir Nuevo Anexo</h2>
+      </div>
+      <button class="modal-close" (click)="close.emit()" aria-label="Cerrar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Fila 1 — Nombre del documento -->
+      <div class="modal-section">
+        <div class="section-label">Datos del documento</div>
+        <div class="m-field">
+          <label class="m-label" for="u_name">Nombre del Documento <span>*</span></label>
+<input class="m-input" id="u_name" type="text" [(ngModel)]="nuevoAnexo.nombre" (input)="errorNombre = false" [style.border-color]="errorNombre ? '#ef4444' : ''" placeholder="Ej. Reglamento de Prácticas Clínicas 2024" (keyup.enter)="validarYEnviar()" />        </div>
+      </div>
+
+      <!-- Fila 2 — Grid 3 columnas: Año · Cat. Principal · Cat. Secundaria -->
+      <div class="modal-section">
+        <div class="meta-grid">
+          <div class="m-field">
+            <label class="m-label" for="u_year">Año <span>*</span></label>
+<input class="m-input" id="u_year" type="text" maxlength="4" (keydown)="verificarTeclaAnio($event)" [(ngModel)]="nuevoAnexo.anio" (input)="errorAnio = false" [style.border-color]="errorAnio ? '#ef4444' : ''" placeholder="Ej. 2024" />          </div>
+          <div class="m-field">
+            <label class="m-label" for="u_cat1">Categoría Principal <span>*</span></label>
+<select class="m-input m-select" id="u_cat1" [(ngModel)]="nuevoAnexo.categoriaPrincipal" (change)="errorCatPrin = false" [style.border-color]="errorCatPrin ? '#ef4444' : ''">
+              <option value="" disabled selected>Selecciona principal…</option>
+              <option value="Inclusión">Inclusión</option>
+              <option value="Interculturalidad">Interculturalidad</option>
+              <option value="Investigación">Investigación</option>
+              <option value="Permanencia y graduación">Permanencia y graduación</option>
+              <option value="Procesos académicos">Procesos académicos</option>
+              <option value="Sin categorizar">Sin categorizar</option>
+            </select>
+          </div>
+          <div class="m-field">
+            <label class="m-label" for="u_cat2">Categoría Secundaria <span>*</span></label>
+<select class="m-input m-select" id="u_cat2" [(ngModel)]="nuevoAnexo.categoriaSecundaria" (change)="errorCatSec = false" [style.border-color]="errorCatSec ? '#ef4444' : ''">
+              <option value="" disabled selected>Selecciona secundaria…</option>
+              <option value="Administrativo">Administrativo</option>
+              <option value="Calidad">Calidad</option>
+              <option value="Docencia">Docencia</option>
+              <option value="Egresados">Egresados</option>
+              <option value="Extensión">Extensión</option>
+              <option value="Infraestructura">Infraestructura</option>
+              <option value="Inclusión">Inclusión</option>
+              <option value="Interculturalidad">Interculturalidad</option>
+              <option value="Investigación">Investigación</option>
+              <option value="Permanencia y graduación">Permanencia y graduación</option>
+              <option value="Procesos académicos">Procesos académicos</option>
+              <option value="Sin categorizar">Sin categorizar</option>
+            </select>
+            <span class="m-hint" id="u_hint" style="display:none;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 2B — Grid 3 columnas: Número · Tipo de Documento · Fuente -->
+      <div class="modal-section">
+        <div class="meta-grid">
+          <div class="m-field">
+            <label class="m-label" for="u_num">Número</label>
+            <input class="m-input" id="u_num" type="text"
+              [(ngModel)]="nuevoAnexo.numeroAnexo"
+              (input)="normalizarNumero($event)"
+              placeholder="Ej. 3A" />
+          </div>
+          <div class="m-field">
+            <label class="m-label" for="u_tipo">Tipo de Documento</label>
+            <input class="m-input" id="u_tipo" type="text"
+              [(ngModel)]="nuevoAnexo.tipoDocumento"
+              (input)="aplicarTitleCase('tipoDocumento', $event)"
+              placeholder="Ej. Resolución" />
+          </div>
+          <div class="m-field">
+            <label class="m-label" for="u_fuente">Fuente</label>
+            <input class="m-input" id="u_fuente" type="text"
+              [(ngModel)]="nuevoAnexo.fuente"
+              (input)="normalizarFuente($event)"
+              placeholder="Ej. 1" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 3 — Descripción del Anexo -->
+      <div class="modal-section">
+        <div class="m-field">
+          <label class="m-label" for="u_desc">Descripción del Anexo <span>*</span></label>
+<textarea class="m-textarea" id="u_desc" [(ngModel)]="nuevoAnexo.descripcion" placeholder="Describe brevemente el contenido y propósito del documento dentro del programa académico"></textarea>          <span class="m-hint">Aparecerá en el listado para facilitar la búsqueda de otros usuarios.</span>
+        </div>
+      </div>
+
+      <!-- Fila 4 — Dropzone -->
+      <div class="modal-section">
+        <div class="section-label">Archivo adjunto</div>
+<div class="m-dropzone" id="u_dropzone" *ngIf="!archivoSeleccionado"
+             ondragover="dzOver(event,'u_dropzone')"
+             ondragleave="dzLeave(event,'u_dropzone')"
+             ondrop="dzDrop(event,'u_dropzone','u_fileInput','u_fpName','u_fpSize','u_fp')">
+          <input type="file" id="u_fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" (change)="seleccionarArchivo($event)"/>
+          <div class="dz-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><polyline points="9 15 12 12 15 15"/></svg>
+          </div>
+          <p class="dz-title">Arrastra el archivo aquí &nbsp;o&nbsp; <span>haz clic para seleccionar</span></p>
+          <p class="dz-sub">Carga segura al repositorio institucional.</p>
+          <div class="dz-fmts"><span class="dz-fmt">PDF</span><span class="dz-fmt">DOCX</span><span class="dz-fmt">XLSX</span><span class="dz-fmt">PPTX</span></div>
+        </div>
+<div class="file-preview" id="u_fp" *ngIf="archivoSeleccionado" style="display: flex;">
+            <div class="fp-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="fp-info"><div class="fp-name" id="u_fpName">{{ archivoSeleccionado.name || '---' }}</div><div class="fp-size" id="u_fpSize">—</div></div>
+          <button class="fp-rm" type="button" (click)="archivoSeleccionado = null; nuevoAnexo.nombre = ''" aria-label="Quitar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fila 5 — Botones -->
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="limpiarYCerrar()">Cancelar</button>
+      <button class="btn-submit" (click)="validarYEnviar()" [disabled]="isSubmitting" [style.opacity]="isSubmitting ? '0.7' : '1'" [style.cursor]="isSubmitting ? 'not-allowed' : 'pointer'">
+        <svg *ngIf="!isSubmitting" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <svg *ngIf="isSubmitting" style="animation:spin 0.85s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke-opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg>
+        {{ isSubmitting ? 'Subiendo...' : 'Subir Anexo' }}
+      </button>
+    </div>
+
+  </div>
+</div>

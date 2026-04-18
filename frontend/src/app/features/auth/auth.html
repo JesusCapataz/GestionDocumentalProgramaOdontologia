@@ -1,0 +1,251 @@
+@if (modoAuth === 'login') {
+<div class="split">
+
+  <aside class="panel-left" style="background-image:url('assets/img/campus-login.jpg');background-size:cover;background-position:center;">
+    <div class="geo-c"></div>
+    <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+
+    <!-- Corrección 1: Identidad Institucional -->
+    <div class="brand">
+      <img src="assets/img/escudo-navbar.png"
+           alt="Escudo Universidad del Magdalena"
+           style="width:44px;height:44px;object-fit:contain;flex-shrink:0;"/>
+      <div>
+        <div class="brand-name">Universidad del Magdalena</div>
+        <div class="brand-sub">Programa de Odontología</div>
+      </div>
+    </div>
+
+    <div class="panel-hero">
+      <div class="panel-eyebrow">Repositorio Institucional</div>
+      <h2 class="panel-title">Gestiona tu<br /><span>documentación</span><br />en un solo lugar.</h2>
+      <p class="panel-desc">Accede, organiza y distribuye todos los anexos académicos del Programa de Odontología de forma segura y eficiente.</p>
+    </div>
+  </aside>
+
+  <section class="panel-right">
+    <div class="form-shell">
+      <div class="form-eyebrow">Bienvenido</div>
+      <h1 class="form-title">Bienvenido de nuevo</h1>
+      <p class="form-sub">Ingresa tus credenciales para acceder al repositorio.</p>
+
+        <form (submit)="$event.preventDefault()">
+           <div class="field">
+          <label class="field-label" for="email">Correo electrónico</label>
+          <div class="email-box" [style.border-color]="errorLoginCorreo ? '#ef4444' : ''">
+            <input id="email" type="text" placeholder="usuario" name="correoLogin" [(ngModel)]="correoLogin" (input)="errorLoginCorreo=false; errorLoginMensaje=''" (keyup.enter)="iniciarSesion(false)" autocomplete="off" />
+            <span class="dominio">@unimagdalena.edu.co</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="pwd">Contraseña</label>
+          <div class="input-wrap">
+<input class="field-input pr" [class.field-error]="errorLoginPass" id="pwd" [type]="tipoPassword" placeholder="••••••••" name="passLogin" [(ngModel)]="passLogin" (input)="errorLoginPass=false; errorLoginMensaje=''" (keyup.enter)="iniciarSesion(false)" />            <button class="eye-btn" type="button" (click)="alternarPassword()" aria-label="Mostrar contraseña">
+                @if (tipoPassword === 'password') {
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    } @else {
+                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        }
+            </button>
+          </div>
+        </div>
+
+        @if (errorLoginMensaje) {
+          <div class="login-error-msg">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ errorLoginMensaje }}
+          </div>
+        }
+        <div class="row-forgot"><a href="javascript:void(0)" (click)="mostrarAyudaPassword=true" class="link-soft">¿Olvidaste tu contraseña?</a></div>
+
+        @if (mostrarAyudaPassword) {
+          <div class="login-error-msg" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;margin-bottom:0.5rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Contacta al administrador del sistema en <strong>jcapataz@unimagdalena.edu.co</strong> para restablecer tu contraseña.
+          </div>
+        }
+
+<button class="btn-primary" type="button"
+  (click)="iniciarSesion(false)"
+  [disabled]="loadingService.isLoading()"
+  [style.opacity]="loadingService.isLoading() ? '0.72' : '1'"
+  [style.cursor]="loadingService.isLoading() ? 'not-allowed' : 'pointer'">
+  @if (loadingService.isLoading()) {
+    <svg style="animation:spin 0.85s linear infinite;flex-shrink:0;"
+      width="17" height="17" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="9" stroke-opacity=".25"/>
+      <path d="M21 12a9 9 0 0 1-9 9"/>
+    </svg>
+    Iniciando sesión...
+  } @else {
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+      <polyline points="10 17 15 12 10 7"/>
+      <line x1="15" y1="12" x2="3" y2="12"/>
+    </svg>
+    Iniciar Sesión
+  }
+</button>
+      </form>
+
+      <p class="form-footer">¿No tienes una cuenta? <a href="javascript:void(0)" (click)="cambiarModoAuth('registro')" class="link-accent">Regístrate aquí</a></p>
+    </div>
+  </section>
+</div>
+} @else {
+<div class="split">
+
+  <aside class="panel-left" style="background-image:url('assets/img/campus-registro.jpg');background-size:cover;background-position:center;">
+    <div class="geo-c"></div>
+    <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+
+    <!-- Corrección 1: Identidad Institucional -->
+    <div class="brand">
+      <img src="assets/img/escudo-navbar.png"
+           alt="Escudo Universidad del Magdalena"
+           style="width:44px;height:44px;object-fit:contain;flex-shrink:0;"/>
+      <div>
+        <div class="brand-name">Universidad del Magdalena</div>
+        <div class="brand-sub">Programa de Odontología</div>
+      </div>
+    </div>
+
+    <div class="panel-hero">
+      <div class="panel-eyebrow">Únete al repositorio</div>
+      <h2 class="panel-title">Tu espacio<br /><span>académico</span><br />te espera.</h2>
+      <p class="panel-desc">Crea tu cuenta y comienza a gestionar, organizar y compartir documentos institucionales de manera centralizada.</p>
+    </div>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="feature-text">Acceso seguro con roles diferenciados</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="feature-text">Búsqueda y filtrado de documentos en segundos</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="feature-text">Asistente IA para apoyo documental integrado</span>
+      </div>
+    </div>
+  </aside>
+
+  <section class="panel-right">
+    <div class="form-shell">
+      <div class="form-eyebrow">Nuevo acceso</div>
+      <h1 class="form-title">Crear una cuenta</h1>
+      <p class="form-sub">Únete al sistema de gestión documental de la Universidad del Magdalena.</p>
+
+        <form (submit)="$event.preventDefault(); crearCuenta()">
+               <div class="field-row">
+       <div class="field">
+         <label class="field-label" for="nombres">Nombres</label>
+         <input class="field-input" [class.field-error]="errorRegNombre" id="nombres" type="text" placeholder="Ej. María José" name="nombreRegistro" [(ngModel)]="nombreRegistro" (input)="errorRegNombre=false" (keyup.enter)="crearCuenta()" autocomplete="given-name" />
+         @if (errorRegNombre) { <span class="field-error-msg">Campo obligatorio</span> }
+       </div>
+       <div class="field">
+         <label class="field-label" for="apellidos">Apellidos</label>
+         <input class="field-input" [class.field-error]="errorRegApellido" id="apellidos" type="text" placeholder="Ej. González Torres" name="apellidoRegistro" [(ngModel)]="apellidoRegistro" (input)="errorRegApellido=false" (keyup.enter)="crearCuenta()" autocomplete="family-name" />
+         @if (errorRegApellido) { <span class="field-error-msg">Campo obligatorio</span> }
+       </div>
+     </div>
+
+        <div class="field">
+          <label class="field-label" for="email">Correo electrónico institucional</label>
+          <div class="email-box" [style.border-color]="errorRegCorreo ? '#ef4444' : ''" [style.box-shadow]="errorRegCorreo ? '0 0 0 3px rgba(239,68,68,0.1)' : ''">
+            <input id="email" type="text" placeholder="usuario" name="correoRegistro" [(ngModel)]="correoRegistro" (input)="errorRegCorreo=false" (keyup.enter)="crearCuenta()" autocomplete="off" />
+            <span class="dominio">@unimagdalena.edu.co</span>
+          </div>
+          @if (errorRegCorreo) { <span class="field-error-msg">Ingresa un prefijo de correo válido</span> }
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="pwd">Contraseña</label>
+         <div class="input-wrap">
+<input class="field-input pr" [class.field-error]="errorRegPass" id="pwd" [type]="tipoPassword" placeholder="Mínimo 8 caracteres" name="passRegistro" [(ngModel)]="passRegistro" (ngModelChange)="validarContrasenaEnTiempoReal($event); errorRegPass=false" autocomplete="new-password" />  
+  <button class="eye-btn" type="button" (click)="alternarPassword()" aria-label="Mostrar contraseña">
+    @if (tipoPassword === 'password') {
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    } @else {
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+    }
+  </button>
+</div>
+          <div class="strength-wrap">
+            <div class="seg" [style.background]="passLongitudValida ? '#22c55e' : ''"></div>
+            <div class="seg" [style.background]="passMayusculaValida ? '#22c55e' : ''"></div>
+            <div class="seg" [style.background]="passNumeroValida ? '#22c55e' : ''"></div>
+            <div class="seg" [style.background]="passEspecialValida ? '#22c55e' : ''"></div>
+          </div>
+          @if (passRegistro.length > 0 || errorRegPass) {
+            <div class="pass-reqs">
+              <span [class.req-ok]="passLongitudValida" [class.req-fail]="!passLongitudValida">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Mínimo 8 caracteres
+              </span>
+              <span [class.req-ok]="passMayusculaValida" [class.req-fail]="!passMayusculaValida">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Una mayúscula
+              </span>
+              <span [class.req-ok]="passMinusculaValida" [class.req-fail]="!passMinusculaValida">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Una minúscula
+              </span>
+              <span [class.req-ok]="passNumeroValida" [class.req-fail]="!passNumeroValida">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Un número
+              </span>
+              <span [class.req-ok]="passEspecialValida" [class.req-fail]="!passEspecialValida">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Un carácter especial (!@#$&*.,-)
+              </span>
+            </div>
+          }
+        </div>
+
+        <p class="terms-note">
+          Al registrarte, aceptas los <a href="#">Términos de Uso</a> y la <a href="#">Política de Privacidad</a> de la Universidad del Magdalena.
+        </p>
+
+        <button class="btn-primary" type="submit"
+          [disabled]="loadingService.isLoading()"
+          [style.opacity]="loadingService.isLoading() ? '0.72' : '1'"
+          [style.cursor]="loadingService.isLoading() ? 'not-allowed' : 'pointer'">
+          @if (loadingService.isLoading()) {
+            <svg style="animation:spin 0.85s linear infinite;flex-shrink:0;"
+              width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9" stroke-opacity=".25"/>
+              <path d="M21 12a9 9 0 0 1-9 9"/>
+            </svg>
+            Creando cuenta...
+          } @else {
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <line x1="20" y1="8" x2="20" y2="14"/>
+              <line x1="23" y1="11" x2="17" y2="11"/>
+            </svg>
+            Registrarse
+          }
+        </button>
+      </form>
+
+      <p class="form-footer">¿Ya tienes una cuenta? <a href="javascript:void(0)" (click)="cambiarModoAuth('login')" class="link-accent">Inicia sesión aquí</a></p>
+    </div>
+  </section>
+</div>
+
+}

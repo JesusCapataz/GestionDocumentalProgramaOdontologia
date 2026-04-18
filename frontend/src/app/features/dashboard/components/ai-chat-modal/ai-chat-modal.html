@@ -1,0 +1,125 @@
+<!-- ════════════════ CHAT POPOVER ════════════════ -->
+<div class="chat-popover" [class.chat-open]="chatAbierto" [class.chat-expandido]="chatExpandido" role="dialog" aria-label="Chat Asistente IA">
+
+  <div class="chat-header">
+    <div class="chat-header-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+    <div class="chat-header-info">
+      <div class="chat-header-title">Asistente IA</div>
+      <div class="chat-header-status">
+        <span class="chat-status-dot"></span>
+        En línea · Repositorio Odontología
+      </div>
+    </div>
+    <button class="chat-close-btn" (click)="toggleExpandir()" aria-label="Expandir chat" style="margin-right:4px;">
+      <svg *ngIf="!chatExpandido" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+        <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+      </svg>
+      <svg *ngIf="chatExpandido" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+        <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+      </svg>
+    </button>
+    <button class="chat-close-btn" (click)="toggleChat()" aria-label="Cerrar chat">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+
+    <div *ngFor="let msg of mensajes" class="chat-bubble-wrap" [class.user]="msg.tipo === 'usuario'">
+      <div class="chat-avatar-mini" [class.ia]="msg.tipo === 'ia'" [class.usr]="msg.tipo === 'usuario'">
+        {{ msg.tipo === 'ia' ? 'IA' : nombreUsuario.charAt(0).toUpperCase() }}
+      </div>
+      <div class="chat-bubble-col">
+        <div class="chat-bubble"
+             [class.ia]="msg.tipo === 'ia' && !msg.esError"
+             [class.usr]="msg.tipo === 'usuario'"
+             [class.chat-bubble--error]="msg.esError"
+             [innerHTML]="msg.texto | iaFormat">
+        </div>
+        <!-- Tarjetas de resultados -->
+        <ng-container *ngIf="msg.resultados && msg.resultados.length > 0">
+          <div class="ia-result-card" *ngFor="let r of msg.resultados">
+            <div class="ia-result-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <div class="ia-result-info">
+              <div class="ia-result-name">{{ r.nombre }}</div>
+              <div class="ia-result-razon">{{ r.razon }}</div>
+            </div>
+            <div class="ia-result-actions">
+              <button class="ia-result-btn" (click)="$event.stopPropagation(); abrirPreview(r.id)" title="Previsualizar">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button class="ia-result-btn" (click)="descargarDesdeChat(r.id, $event)" title="Descargar">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="chat-bubble-time">{{ msg.hora }}</div>
+      </div>
+    </div>
+
+    <!-- Indicador de escritura -->
+    <div *ngIf="cargando" class="chat-bubble-wrap">
+      <div class="chat-avatar-mini ia">IA</div>
+      <div class="chat-bubble-col">
+        <div class="chat-typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="chat-input-area">
+    <input
+      class="chat-input"
+      id="chatInput"
+      type="text"
+      placeholder="Escribe un mensaje…"
+      [(ngModel)]="inputUsuario"
+      (keydown)="onEnter($event)"
+      autocomplete="off"
+      [disabled]="cargando"/>
+    <button class="chat-send-btn" (click)="enviarMensaje()" [disabled]="cargando" aria-label="Enviar mensaje">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
+
+<!-- ════════════════ FAB ════════════════ -->
+<button class="fab" (click)="toggleChat()" aria-label="Asistente IA">
+  <div class="fab-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  </div>
+  <div class="fab-text-block">
+    <div class="fab-title">Asistente IA</div>
+    <div class="fab-sub">¿Necesitas ayuda?</div>
+  </div>
+  <div class="pulse-dot"></div>
+</button>

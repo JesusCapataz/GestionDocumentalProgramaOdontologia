@@ -1,0 +1,444 @@
+ /* ────── NAVBAR ────── */
+  .navbar { background: var(--primary); position: sticky; top: 0; z-index: 50; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .logo-block { display: flex; align-items: center; gap: 13px; }
+  .shield-placeholder { width: 40px; height: 40px; flex-shrink: 0; background: rgba(255,255,255,0.14); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .shield-placeholder svg { width: 22px; height: 22px; }
+  .logo-text { font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+  .logo-sub  { font-size: 0.65rem; font-weight: 400; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1px; }
+  .user-block { display: flex; align-items: center; gap: 12px; }
+  .user-info { text-align: right; }
+  .user-name { font-size: 0.875rem;  font-weight: 500;  color: #fff;  line-height: 1.2;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; display: block;}  .user-role { font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#0066cc,#0099ff); border: 2px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 600; color: #fff; cursor: default; flex-shrink: 0; }
+
+  /* ────── MAIN ────── */
+  .main { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem 6rem; }
+
+  /* ────── WELCOME ────── */
+  .welcome-section { margin-bottom: 2.5rem; }
+  .welcome-program { font-size: 0.78rem; font-weight: 500; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .welcome-program span { color: var(--text-soft); font-weight: 400; margin: 0 6px; }
+  .welcome-title { font-size: 2.25rem; font-weight: 700; color: var(--text-dark); letter-spacing: -0.03em; line-height: 1.1; }
+
+  @media (max-width: 768px) {
+  .welcome-title { font-size: 1.75rem; }
+  }
+
+  /* ── User block interactivo ── */
+.user-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+  outline: none;
+  user-select: none;
+}
+.user-block:hover,
+.user-block:focus-visible {
+  background: rgba(255, 255, 255, 0.09);
+}
+.user-block:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+/* ── Dropdown container ── */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 59, 113, 0.14), 0 2px 8px rgba(0, 59, 113, 0.08);
+  z-index: 300;
+  /* Oculto por defecto */
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.user-dropdown.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* ── Header con nombre dentro del dropdown ── */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.9rem 1rem;
+}
+.dropdown-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0066cc, #0099ff);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dropdown-name {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+  display: block;
+}
+.dropdown-email {
+  font-size: 0.68rem;
+  color: var(--text-soft);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 155px;
+}
+
+/* ── Divider ── */
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ── Items ── */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.7rem 1rem;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  cursor: pointer;
+}
+.dropdown-item:last-child {
+  border-radius: 0 0 14px 14px;
+}
+.dropdown-item:first-of-type {
+  margin-top: 4px;
+}
+.dropdown-item:last-of-type {
+  margin-bottom: 4px;
+}
+.dropdown-item:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+/* Opción destructiva — Cerrar Sesión */
+.dropdown-item--danger:hover {
+  background: #fff5f5;
+  color: #dc2626;
+}
+
+/* ── Contenedor interior del body ── */
+.logout-confirm-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.5rem 0 0.25rem;
+  text-align: center;
+}
+
+/* ── Icono central ── */
+.logout-icon-wrap {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  background: #fff5f5;
+  border: 1.5px solid #fecaca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+/* ── Bloque de texto ── */
+.logout-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 340px;
+}
+.logout-heading {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+.logout-sub {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+}
+
+/* ── Píldora de sesión activa ── */
+.logout-session-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--primary-light);
+  border: 1px solid rgba(0, 59, 113, 0.12);
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: 0.76rem;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+.session-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+
+/* ── Botón destructivo ── */
+.btn-danger {
+  height: 40px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 9px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  background: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.btn-danger:hover {
+  background: #dc2626;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.38);
+  transform: translateY(-1px);
+}
+.btn-danger:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+.btn-danger svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Variante estrecha para diálogos de sistema ── */
+.modal-card--narrow {
+  max-width: 420px;
+}
+
+/* ── Header sin título, solo la X alineada al borde ── */
+.modal-header--centered {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.1rem 0;
+  border-bottom: none;
+}
+
+/* ── Bloque de contenido centrado ── */
+.nf-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 0.25rem 1rem 0.5rem;
+}
+
+/* ── Icono ── */
+.nf-icon-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
+  background: var(--primary-light);
+  border: 1.5px solid rgba(0, 59, 113, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 0.25rem;
+  box-shadow:
+    0 1px 3px rgba(0, 59, 113, 0.06),
+    0 4px 16px rgba(0, 59, 113, 0.05);
+}
+
+/* ── Eyebrow ── */
+.nf-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* ── Título ── */
+.nf-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+/* ── Subtítulo ── */
+.nf-subtitle {
+  font-size: 0.855rem;
+  color: var(--text-soft);
+  line-height: 1.7;
+  max-width: 320px;
+}
+
+/* ── Píldora informativa ── */
+.nf-info-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 5px 13px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  margin-top: 0.25rem;
+}
+.nf-info-pill svg {
+  flex-shrink: 0;
+  color: var(--text-soft);
+}
+
+/* ── Footer centrado ── */
+.modal-footer--centered {
+  justify-content: center;
+  padding-top: 0.75rem;
+  border-top: none;
+}
+
+/* ── Botón "Entendido" ── */
+.btn-understood {
+  height: 42px;
+  padding: 0 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  background: #fff;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.15s, border-color 0.15s,
+              color 0.15s, transform 0.1s;
+  box-shadow: 0 1px 3px rgba(0, 59, 113, 0.07);
+}
+.btn-understood:hover {
+  background: var(--primary-light);
+  border-color: rgba(0, 59, 113, 0.25);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+.btn-understood:active {
+  transform: translateY(0);
+}
+
+.kbd-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border: 1px solid #cbd5e1;
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: #f8fafc;
+  font-family: 'Figtree', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* ── Botón de atajos en el navbar ── */
+.navbar-help-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  margin-right: 4px;
+}
+.navbar-help-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+.navbar-help-btn:active {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(0.96);
+}
+.navbar-help-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* ── Hover semántico del botón Cerrar en modal de atajos ── */
+.btn-cancel--shortcuts {
+  min-width: 110px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+}
+.btn-cancel--shortcuts:hover {
+  background: var(--primary-light);
+  border-color: rgba(0, 59, 113, 0.25);
+  color: var(--primary);
+}
+.btn-cancel--shortcuts:active {
+  transform: translateY(1px);
+  background: #dbeafe;
+}
+.shortcuts-hint-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.shortcuts-hint-btn:hover {
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.1);
+}

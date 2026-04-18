@@ -1,0 +1,36 @@
+/* Contenedor flotante */
+.toast-container { position: fixed; bottom: 1.75rem; left: 1.75rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.65rem; pointer-events: none; }
+/* Tarjeta Base */
+.toast { position: relative; display: flex; flex-direction: column; width: 340px; background: #ffffff; border-radius: 14px; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 10px 28px -5px rgba(0, 0, 0, 0.10), 0 0 0 0.5px rgba(0, 0, 0, 0.04); overflow: hidden; pointer-events: all; }
+/* Franja lateral */
+.toast-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 14px 0 0 14px; }
+.toast--success .toast-stripe { background: #10b981; }
+.toast--download .toast-stripe { background: #3b82f6; }
+.toast--delete .toast-stripe { background: #f43f5e; }
+/* Cuerpo */
+.toast-body { display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 0.9rem 0.9rem 1.1rem; }
+/* Icono */
+.toast-icon-wrap { flex-shrink: 0; width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.toast--success .toast-icon-wrap { background: #ecfdf5; color: #10b981; }
+.toast--download .toast-icon-wrap { background: #eff6ff; color: #3b82f6; }
+.toast--delete .toast-icon-wrap { background: #fff1f2; color: #f43f5e; }
+.icon { width: 17px; height: 17px; }
+/* Spinner */
+.spinner { animation: spin 0.9s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+/* Texto */
+.toast-text { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.toast-message { font-family: 'Figtree', system-ui, sans-serif; font-size: 0.855rem; font-weight: 500; color: #1e293b; line-height: 1.45; display: block; }
+.toast-undo { background: none; border: none; padding: 0; font-family: 'Figtree', system-ui, sans-serif; font-size: 0.78rem; font-weight: 700; color: #f43f5e; cursor: pointer; letter-spacing: 0.01em; transition: color 0.15s, text-decoration-color 0.15s; text-decoration: underline; text-underline-offset: 2px; text-decoration-color: transparent; width: fit-content; }
+.toast-undo:hover { color: #e11d48; text-decoration-color: #e11d48; }
+/* Botón cerrar */
+.toast-close { flex-shrink: 0; width: 26px; height: 26px; border: none; border-radius: 7px; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: background 0.12s, color 0.12s; padding: 0; }
+.toast-close:hover { background: #f1f5f9; color: #475569; }
+.toast-close svg { width: 12px; height: 12px; }
+/* Barra progreso */
+.toast-progress-track { height: 3px; background: #fce7eb; border-radius: 0 0 14px 14px; overflow: hidden; }
+.toast-progress-bar { height: 100%; background: linear-gradient(90deg, #fb7185, #f43f5e); border-radius: inherit; transition: width 100ms linear; }
+
+/* ── Toast Warning (ámbar) ── */
+.toast--warning .toast-stripe { background: #f59e0b; }
+.toast--warning .toast-icon-wrap { background: #fffbeb; color: #d97706; }

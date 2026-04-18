@@ -1,0 +1,387 @@
+<!-- ════════════════ NAVBAR ════════════════ -->
+<header class="navbar">
+  <div class="navbar-inner">
+    <div class="logo-block">
+      <img 
+        src="assets/img/escudo-navbar1.png"
+        alt="Escudo Universidad del Magdalena"
+        title="Universidad del Magdalena"
+        style="width:38px;height:38px;object-fit:contain;flex-shrink:0;"
+      />
+      <div>
+        <div class="logo-text">Universidad del Magdalena</div>
+        <div class="logo-sub">Programa de Odontología</div>
+      </div>
+    </div>
+
+
+<div style="display:flex;align-items:center;gap:8px;">
+<button class="shortcuts-hint-btn" (click)="modalAtajosAbierto = true" title="Ver atajos de teclado (?)" aria-label="Atajos de teclado">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="6" width="20" height="12" rx="2"/>
+    <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>
+  </svg>
+</button>
+<div class="user-block" (click)="$event.stopPropagation(); toggleMenu()" tabindex="0" role="button">
+      <div class="user-info">
+      <div class="user-name">{{ nombresUsuario | shortName }} {{ apellidosUsuario | shortName }}</div>
+      <div class="user-role">{{ rolUsuario }}</div>
+    </div>
+    <div class="avatar">{{ iniciales }}</div>
+
+<div class="user-dropdown"
+  [class.is-open]="menuAbierto"
+  role="menu"
+  (clickOutside)="menuAbierto = false"
+  [pauseClickOutside]="pausarClickOutside">
+        <div class="dropdown-header">
+        <div class="dropdown-avatar">{{ iniciales }}</div>
+        <div>
+          <div class="dropdown-name">{{ nombresUsuario | shortName }} {{ apellidosUsuario | shortName }}</div>
+          <div class="dropdown-email">Miembro Activo</div>
+        </div>
+      </div>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" role="menuitem" style="cursor: pointer; display: flex; align-items: center; width: 100%; height: 45px; padding: 0 16px; position: relative; z-index: 10;" (click)="$event.stopPropagation(); abrirModalCuenta()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        Gestionar Cuenta
+      </a>
+      <div class="dropdown-divider"></div>
+
+     @if (rolRealUsuario === 'SUPER_ADMIN') {
+        <a class="dropdown-item" role="menuitem" style="cursor: pointer; display: flex; align-items: center; width: 100%; height: 45px; padding: 0 16px; position: relative; z-index: 10;" (click)="$event.stopPropagation(); abrirModalUsuarios()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          Gestión de Usuarios
+        </a>
+      }
+      <a class="dropdown-item dropdown-item--danger" role="menuitem" style="cursor: pointer; display: flex; align-items: center; width: 100%; height: 45px; padding: 0 16px; position: relative; z-index: 10;" (click)="$event.stopPropagation(); pedirConfirmacionSalida()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Cerrar Sesión
+      </a>
+    </div>
+  </div>
+  </div>
+</div>
+</header>
+<!-- ════════════════ MAIN ════════════════ -->
+<main class="main">
+
+  <section class="welcome-section fade-up delay-1">
+    <div class="welcome-program">Programa de Odontología <span>•</span> Facultad de Ciencias de la Salud</div>
+    <h1 class="welcome-title">Resumen Operativo</h1>
+  </section>
+
+  <app-metrics-cards 
+    [total]="totalAnexosMetrica"
+    [actualizados]="actualizadosMetrica"
+    [rangoAnios]="rangoAniosMetrica"
+    [filtroActualizadosActivo]="filtroActualizadosActivo"
+    [isLoadingActualizados]="isGlobalLoading()"
+    (toggleActualizados)="toggleFiltroActualizados()">
+  </app-metrics-cards>
+
+<app-anexos-table 
+  [datos]="anexosFiltrados" 
+  [listaAnios]="listaAniosReales"
+  [rolExterior]="rolRealUsuario"
+  (buscar)="ejecutarFiltrosDesdeTabla($event)"
+  [mostrandoActualizados]="filtroActualizadosActivo"
+  (solicitarModal)="abrirModal($event.tipo, $event.data)"
+  (descargar)="descargarAnexo($event)"
+  (eliminar)="eliminarAnexo($event)">
+  
+</app-anexos-table></main>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer style="background:#fff;border-top:1px solid #e2e8f0;margin-top:3rem;">
+
+  <!-- Franja superior: escudo + columnas de enlaces -->
+  <div style="max-width:1280px;margin:0 auto;padding:2.25rem 2rem 1.75rem;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:2.5rem;align-items:start;">
+
+    <!-- Escudo + nombre -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding-right:1rem;border-right:1px solid #e2e8f0;">
+      <img src="assets/img/escudo-footer.png"
+           alt="Escudo Unimagdalena" style="width:64px;height:64px;object-fit:contain;"/>
+      <span style="font-size:0.68rem;font-weight:700;color:#003B71;text-align:center;letter-spacing:0.04em;text-transform:uppercase;line-height:1.4;max-width:100px;">Universidad del Magdalena</span>
+    </div>
+
+    <!-- Col 1: Sistema -->
+    <div>
+      <p style="font-size:0.68rem;font-weight:700;color:#003B71;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.85rem;">Sistema</p>
+      <div style="display:flex;flex-direction:column;gap:0.55rem;">
+        <a href="https://www.unimagdalena.edu.co" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Portal Unimagdalena</a>
+        <a href="https://campusvirtual.unimagdalena.edu.co" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Campus Virtual</a>
+        <a href="https://biblioteca.unimagdalena.edu.co" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Biblioteca Germán Bula</a>
+        <a href="https://bienestar.unimagdalena.edu.co" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Bienestar Universitario</a>
+      </div>
+    </div>
+
+    <!-- Col 2: Programa -->
+    <div>
+      <p style="font-size:0.68rem;font-weight:700;color:#003B71;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.85rem;">Programa</p>
+      <div style="display:flex;flex-direction:column;gap:0.55rem;">
+        <a href="https://www.unimagdalena.edu.co/odontologia" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Odontología</a>
+        <a href="https://www.unimagdalena.edu.co/ciencias-de-la-salud" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Facultad Ciencias de la Salud</a>
+        <a href="https://www.unimagdalena.edu.co/calendario" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Calendario Académico</a>
+        <a href="https://www.unimagdalena.edu.co/reglamento" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Reglamento Estudiantil</a>
+      </div>
+    </div>
+
+    <!-- Col 3: Legal -->
+    <div>
+      <p style="font-size:0.68rem;font-weight:700;color:#003B71;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.85rem;">Legal y Contacto</p>
+      <div style="display:flex;flex-direction:column;gap:0.55rem;">
+        <a href="https://www.unimagdalena.edu.co/proteccion-datos" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Protección de Datos</a>
+        <a href="https://www.unimagdalena.edu.co/transparencia" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">Transparencia</a>
+        <a href="https://www.unimagdalena.edu.co/pqrs" target="_blank" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">PQRS</a>
+        <a href="mailto:ciudadano@unimagdalena.edu.co" style="font-size:0.8rem;color:#64748b;text-decoration:none;" onmouseover="this.style.color='#003B71'" onmouseout="this.style.color='#64748b'">ciudadano@unimagdalena.edu.co</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Franja inferior: copyright + sello acreditación -->
+  <div style="border-top:1px solid #e2e8f0;">
+    <div style="max-width:1280px;margin:0 auto;padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+
+      <p style="font-size:0.75rem;color:#94a3b8;margin:0;">
+        © 2025 <strong style="color:#64748b;">Universidad del Magdalena</strong> &nbsp;·&nbsp; Programa de Odontología &nbsp;·&nbsp; Repositorio Institucional de Anexos
+      </p>
+
+      <!-- Sello acreditación oficial desde CDN -->
+      <img src="assets/img/acreditacion.png"
+           alt="Acreditación Institucional Alta Calidad"
+           title="Acreditación Institucional de Alta Calidad · Res. 16891 · MEN 2016"
+           style="height:40px;width:auto;object-fit:contain;opacity:0.85;"
+           onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'"/>
+    </div>
+  </div>
+
+</footer>
+
+<app-upload-modal
+[isOpen]="modalActivo() === 'upload'"
+(close)="cerrarModal()"
+(guardar)="guardarNuevoAnexo($event)">
+</app-upload-modal><app-edit-modal [isOpen]="modalActivo() === 'edit'" [anexoSeleccionado]="anexoSeleccionado" (close)="cerrarModal()" (guardar)="actualizarAnexoExistente($event)"></app-edit-modal>
+<app-pdf-viewer-modal [isOpen]="modalActivo() === 'preview'" [anexoSeleccionado]="anexoSeleccionado" (close)="cerrarModal()" (descargar)="descargarAnexo($event)"></app-pdf-viewer-modal>
+<app-ai-chat-modal></app-ai-chat-modal>
+
+<!-- MODAL DE GESTIÓN DE CUENTA -->
+<app-account-modal 
+  #accountModal
+  [isOpen]="modalActivo() === 'cuenta'" 
+  [nombres]="nombresUsuario" 
+  [apellidos]="apellidosUsuario" 
+  [rol]="rolUsuario"
+  [rolReal]="rolRealUsuario"
+  [correo]="correoUsuario"
+  (closeModal)="cerrarModal()"
+  (actualizarPerfil)="actualizarPerfilUsuario($event)"
+  (actualizarPassword)="actualizarPasswordUsuario($event)"
+  (verificarIdentidad)="verificarIdentidadUsuario($event)">
+</app-account-modal>
+
+<div class="modal-backdrop" [class.is-open]="modalConfirmarSalida" role="dialog" aria-modal="true">
+  <div class="modal-card md">
+
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Seguridad de Cuenta</div>
+        <h2 class="modal-title">Cerrar Sesión</h2>
+      </div>
+      <button class="modal-close" (click)="modalConfirmarSalida = false" aria-label="Cerrar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="logout-confirm-box">
+
+        <div class="logout-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+
+        <div class="logout-text-block">
+          <p class="logout-heading">¿Deseas cerrar tu sesión?</p>
+          <p class="logout-sub">Saldrás del Repositorio Institucional de Odontología. Cualquier trabajo no guardado se perderá. Podrás volver a ingresar cuando lo necesites.</p>
+        </div>
+
+        <div class="logout-session-pill">
+          <div class="session-dot"></div>
+          <span>Sesión activa como <strong>{{ nombreUsuario }}</strong> · {{ rolUsuario }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="modalConfirmarSalida = false; resolverNavegacion(false)">Cancelar</button>
+      <button class="btn-danger" (click)="resolverNavegacion(true)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sí, cerrar sesión
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-backdrop" [class.is-open]="modalErrorAbierto" role="dialog" aria-modal="true" aria-labelledby="noFileTitle">
+  <div class="modal-card modal-card--narrow">
+    
+    <div class="modal-header modal-header--centered">
+      <button class="modal-close" (click)="modalErrorAbierto = false" aria-label="Cerrar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="nf-content">
+        <div class="nf-icon-wrap">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12 a2 2 0 0 0 2-2V8z" stroke="#003B71" stroke-width="1.4"/>
+            <polyline points="14 2 14 8 20 8" stroke="#003B71" stroke-width="1.4"/>
+            <circle cx="10.5" cy="14.5" r="3" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="12.6" y1="16.6" x2="15" y2="19" stroke="#94a3b8" stroke-width="1.6"/>
+            <line x1="10.5" y1="13.6" x2="10.5" y2="14.2" stroke="#94a3b8" stroke-width="1.5"/>
+            <circle cx="10.5" cy="15.3" r="0.3" fill="#94a3b8"/>
+          </svg>
+        </div>
+        
+        <span class="nf-eyebrow">Sistema · Repositorio Institucional</span>
+        
+        <h2 class="nf-title" id="noFileTitle">Documento No Disponible</h2>
+        
+        <p class="nf-subtitle">
+          Este registro existe en la base de datos, pero aún no tiene
+          un archivo físico asociado en el servidor. Es posible que el
+          administrador no haya cargado el documento todavía.
+        </p>
+        
+        <div class="nf-info-pill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Solo los administradores pueden adjuntar archivos al registro
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer modal-footer--centered">
+      <button class="btn-understood" (click)="modalErrorAbierto = false">
+        Entendido
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL DE ATAJOS DE TECLADO -->
+<div class="modal-backdrop" *ngIf="modalAtajosAbierto" style="display:flex;" role="dialog" aria-modal="true">
+  <div class="modal-card md" style="max-width:520px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-eyebrow">Accesibilidad</div>
+        <h2 class="modal-title">Atajos de Teclado</h2>
+      </div>
+      <button class="modal-close" (click)="modalAtajosAbierto = false" aria-label="Cerrar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" style="padding-bottom:1.5rem;">
+
+      <div style="font-size:0.68rem;font-weight:700;color:#94a3b8;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:8px;">
+        Tabla de Documentos
+        <span style="flex:1;height:1px;background:#e2e8f0;display:block;"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1.25rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Seleccionar / deseleccionar fila</span>
+          <span><kbd class="kbd-tag">Clic</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Seleccionar múltiples filas</span>
+          <span><kbd class="kbd-tag">Shift</kbd> + <kbd class="kbd-tag">Clic</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Seleccionar / deseleccionar todas</span>
+          <span><kbd class="kbd-tag">S</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Ver documento seleccionado</span>
+          <span><kbd class="kbd-tag">Enter</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Editar documento seleccionado</span>
+          <span><kbd class="kbd-tag">E</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Eliminar selección</span>
+          <span><kbd class="kbd-tag">Del</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Navegar por filas</span>
+          <span><kbd class="kbd-tag">↑</kbd> <kbd class="kbd-tag">↓</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Cancelar selección</span>
+          <span><kbd class="kbd-tag">Esc</kbd></span>
+        </div>
+      </div>
+
+      <div style="font-size:0.68rem;font-weight:700;color:#94a3b8;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:8px;">
+        Acciones Globales
+        <span style="flex:1;height:1px;background:#e2e8f0;display:block;"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.55rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Deshacer eliminación</span>
+          <span><kbd class="kbd-tag">Ctrl</kbd> + <kbd class="kbd-tag">Z</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Ver esta ayuda</span>
+          <span><kbd class="kbd-tag">?</kbd></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;">
+          <span style="color:#475569;">Enviar formularios</span>
+          <span><kbd class="kbd-tag">Enter</kbd></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn-cancel btn-cancel--shortcuts" (click)="modalAtajosAbierto = false">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE GESTIÓN DE USUARIOS -->
+<app-user-management-modal 
+  [isOpen]="modalActivo() === 'usuarios'" 
+  [currentUserEmail]="correoUsuario"
+  [currentUserRol]="rolRealUsuario"
+  (closeModal)="cerrarModal()">
+</app-user-management-modal>

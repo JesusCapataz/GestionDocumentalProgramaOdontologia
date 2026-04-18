@@ -1,0 +1,280 @@
+ /* ────── MODAL B: Preview — visor fullscreen ────── */
+  /* ── Card: contenedor flex vertical con altura fija ── */
+  .modal-card.preview-full {
+    max-width: 92vw;
+    width: 92vw;
+    height: 90vh;          /* altura fija — el flex se encarga del resto */
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;      /* nada desborda la card */
+  }
+
+  /* ── Header: tamaño natural, no crece ── */
+  .modal-card.preview-full .modal-header {
+    flex-shrink: 0;
+  }
+
+  /* ── Body: ocupa TODO el espacio sobrante ── */
+  .modal-card.preview-full .modal-body {
+    flex: 1 1 0;           /* crece, se encoge, parte desde 0 */
+    overflow: hidden;      /* el iframe no desborda */
+    padding: 0 1.5rem;     /* respira a los lados, sin padding vertical */
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Footer: tamaño natural, no crece, siempre visible ── */
+  .modal-card.preview-full .modal-footer {
+    flex-shrink: 0;
+  }
+
+  /* ── Viewer: ocupa todo el body ── */
+  .preview-viewer-full {
+    background: #f1f5f9;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    flex: 1 1 0;           /* reemplaza el height fijo — crece con el body */
+    min-height: 0;         /* necesario para que flex respete el límite */
+    position: relative;
+    overflow: hidden;
+  }
+  .preview-viewer-full::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,59,113,0.04) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(0,59,113,0.04) 28px);
+    pointer-events: none;
+    border-radius: 14px;
+  }
+  .preview-pdf-big-icon {
+    width: 120px; height: 120px;
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 32px rgba(0,59,113,0.12), 0 2px 8px rgba(0,59,113,0.08);
+    position: relative; z-index: 1;
+  }
+  .preview-pdf-big-label {
+    font-size: 1.15rem; font-weight: 700; color: var(--text-dark);
+    letter-spacing: -0.02em; position: relative; z-index: 1;
+  }
+  .preview-pdf-big-filename {
+    font-size: 0.9rem; color: var(--text-mid); font-weight: 500;
+    position: relative; z-index: 1; max-width: 500px; text-align: center;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 2rem;
+  }
+  .preview-pdf-hint {
+    font-size: 0.78rem; color: var(--text-soft); position: relative; z-index: 1;
+  }
+  .preview-lines {
+    display: flex; flex-direction: column; gap: 8px; width: 260px;
+    position: relative; z-index: 1; margin-top: 0.5rem;
+  }
+  .preview-line { height: 8px; background: #cbd5e1; border-radius: 99px; }
+
+
+
+
+  /* ── Empty State del visor PDF ── */
+.preview-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.pes-icon-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
+  background: #f8fafc;
+  border: 1.5px solid var(--border);
+  box-shadow:
+    0 1px 3px rgba(0, 59, 113, 0.06),
+    0 4px 16px rgba(0, 59, 113, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pes-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.pes-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+.pes-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 5px 13px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  letter-spacing: 0.02em;
+  margin-top: 0.25rem;
+}
+
+.pes-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  flex-shrink: 0;
+}
+/* ── Visor PDF real ── */
+.pdf-viewer-object {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+  display: block;
+  background: #f8fafc;
+}
+
+/* ── Fallback elegante ── */
+.pdf-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 2.5rem;
+}
+
+.pdf-fallback-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  box-shadow:
+    0 1px 3px rgba(0, 59, 113, 0.06),
+    0 4px 16px rgba(0, 59, 113, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pdf-fallback-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.pdf-fallback-sub {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.7;
+  max-width: 290px;
+}
+
+.pdf-fallback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 0.25rem;
+  padding: 9px 18px;
+  border-radius: 9px;
+  background: var(--primary);
+  color: #fff;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 59, 113, 0.28);
+  transition: background 0.15s, transform 0.1s;
+}
+.pdf-fallback-btn:hover {
+  background: var(--primary-mid);
+  transform: translateY(-1px);
+}
+.pdf-fallback-btn:active {
+  transform: translateY(0);
+}
+/* ── Modificador error para el wrapper del ícono ── */
+.pes-icon-wrap--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  box-shadow:
+    0 1px 3px rgba(239, 68, 68, 0.07),
+    0 4px 16px rgba(239, 68, 68, 0.06);
+}
+
+/* ── Modificador error para la píldora ── */
+.pes-status-pill--error {
+  background: #fff5f5;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+/* ── Punto de estado rojo ── */
+.pes-status-dot--error {
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+/* ── Modificador warning para el wrapper del ícono ── */
+.pes-icon-wrap--warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  box-shadow:
+    0 1px 3px rgba(217, 119, 6, 0.07),
+    0 4px 16px rgba(217, 119, 6, 0.06);
+}
+
+/* ── Modificador warning para la píldora ── */
+.pes-status-pill--warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+/* ── Punto de estado ámbar ── */
+.pes-status-dot--warning {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+/* ── Spinner del visor de documentos ── */
+.pdf-spinner {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  animation: pdfSpin 0.9s linear infinite;
+}
+
+@keyframes pdfSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
